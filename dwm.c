@@ -114,6 +114,7 @@ typedef struct {
 struct Monitor {
 	char ltsymbol[16];
 	float mfact;
+	float tfact;
 	int nmaster;
 	int num;
 	int by;               /* bar geometry */
@@ -202,6 +203,7 @@ static void setfocus(Client *c);
 static void setfullscreen(Client *c, int fullscreen);
 static void setlayout(const Arg *arg);
 static void setmfact(const Arg *arg);
+static void settfact(const Arg *arg);
 static void setup(void);
 static void seturgent(Client *c, int urg);
 static void showhide(Client *c);
@@ -317,6 +319,13 @@ applysizehints(Client *c, int *x, int *y, int *w, int *h, int interact)
 {
 	int baseismin;
 	Monitor *m = c->mon;
+
+	if (m->lt[m->sellt]->arrange == tile) {
+		*x = (*x + (*w - (*w * m->tfact)) / 2.0f);
+		*y = (*y + (*h - (*h * m->tfact)) / 2.0f);
+		*w *= m->tfact;
+		*h *= m->tfact;
+	}
 
 	/* set minimum possible */
 	*w = MAX(1, *w);
@@ -637,6 +646,7 @@ createmon(void)
 	m = ecalloc(1, sizeof(Monitor));
 	m->tagset[0] = m->tagset[1] = 1;
 	m->mfact = mfact;
+	m->tfact = tfact;
 	m->nmaster = nmaster;
 	m->showbar = showbar;
 	m->topbar = topbar;
@@ -1528,6 +1538,20 @@ setmfact(const Arg *arg)
 	if (f < 0.05 || f > 0.95)
 		return;
 	selmon->mfact = f;
+	arrange(selmon);
+}
+
+void
+settfact(const Arg *arg)
+{
+	float f;
+
+	if (!arg || !selmon->lt[selmon->sellt]->arrange)
+		return;
+	f = arg->f + selmon->tfact;
+	if (f < 0.05 || f > 1.00)
+		return;
+	selmon->tfact = f;
 	arrange(selmon);
 }
 
