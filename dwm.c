@@ -320,7 +320,7 @@ applysizehints(Client *c, int *x, int *y, int *w, int *h, int interact)
 	int baseismin;
 	Monitor *m = c->mon;
 
-	if (m->lt[m->sellt]->arrange == tile) {
+	if (!c->isfloating && m->lt[m->sellt]->arrange == tile) {
 		*x = (*x + (*w - (*w * m->tfact)) / 2.0f);
 		*y = (*y + (*h - (*h * m->tfact)) / 2.0f);
 		*w *= m->tfact;
