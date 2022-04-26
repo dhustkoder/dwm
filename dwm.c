@@ -443,9 +443,11 @@ buttonpress(XEvent *e)
 	}
 	if (ev->window == selmon->barwin) {
 		i = x = 0;
-		do
+		do {
+			while (!((active_tags_mask>>i)&0x01))
+				++i;
 			x += TEXTW(tags[i]);
-		while (ev->x >= x && ++i < LENGTH(tags));
+		} while (ev->x >= x && ++i < LENGTH(tags));
 		if (i < LENGTH(tags)) {
 			click = ClkTagBar;
 			arg.ui = 1 << i;
@@ -725,13 +727,19 @@ drawbar(Monitor *m)
 		drw_text(drw, m->ww - tw, 0, tw, bh, 0, stext, 0);
 	}
 
+	active_tags_mask = m->tagset[m->seltags];
 	for (c = m->clients; c; c = c->next) {
-		occ |= c->tags;
+		if (c->tags != TAGMASK)
+			active_tags_mask |= c->tags;
+		occ |= c->tags & active_tags_mask;
 		if (c->isurgent)
-			urg |= c->tags;
+			urg |= c->tags & active_tags_mask;
 	}
+
 	x = 0;
 	for (i = 0; i < LENGTH(tags); i++) {
+		if (!((active_tags_mask>>i)&0x01))
+			continue;
 		w = TEXTW(tags[i]);
 		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeSel : SchemeNorm]);
 		drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
