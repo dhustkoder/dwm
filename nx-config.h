@@ -1,24 +1,26 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx  = 1;        /* border pixel of windows */
+static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "mononoki:size=22", "JoyPixels:size=20" };
 static const char dmenufont[]       = "mononoki:size=22";
-static const char col_gray1[]       = "#222222";
+static const char col_gray1[]       = "#333333";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
+static const char col_white[]       = "#ffffff";
 static const char col_cyan[]        = "#005577";
 static const char col_black[]       = "#000000";
 static const char col_light_green[] = "#00d700";
-static const char col_dark_green[]  = "#003400";
+static const char col_dark_green[]  = "#004700";
+static const char col_bord_green[]  = "#00A700";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
-	[SchemeNorm] = { col_gray3, col_black, col_gray2 },
-	[SchemeSel]  = { col_gray4, col_dark_green,  col_light_green  },
+	[SchemeNorm] = { col_gray3, col_black,  col_gray1  },
+	[SchemeSel]  = { col_white, col_dark_green,  col_bord_green },
 };
 
 /* tagging */
